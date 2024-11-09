@@ -12,8 +12,7 @@ public:
     size_t edgeCount;
     std::vector<Edge> edges;
 
-    Graph(size_t vertexCount, std::vector<Edge>& edges) : 
-        vertexCount(vertexCount), edges(edges), edgeCount(edges.size()) {}
+    Graph(size_t vertexCount, std::vector<Edge>& edges);
 };
 
 #endif//__GRAPH_H

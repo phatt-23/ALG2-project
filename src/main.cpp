@@ -24,7 +24,7 @@ Partition* createPartition(std::vector<int> choices, Graph g)
     std::fill(mstEdges.begin(), mstEdges.end(), -1);
 
     int ptr = 0;
-    for (int x=0; x<g.edgeCount; x++)
+    for (size_t x=0; x<g.edgeCount; x++)
     {
         if (choices[x] == 1)
         {
@@ -35,7 +35,7 @@ Partition* createPartition(std::vector<int> choices, Graph g)
         }
     }
 
-    for (int x=0; x<g.edgeCount; x++) 
+    for (size_t x=0; x<g.edgeCount; x++) 
     {
         if (ds.numberOfComponents == 1)
             break;
@@ -79,15 +79,15 @@ vector<Partition> solve(Graph g)
         Partition* p = q.top();
         q.pop();
         
-        for (int x=0; x<g.vertexCount-1; x++) 
+        for (size_t x=0; x<g.vertexCount-1; x++) 
         {
             if (p->choices[p->mstEdges[x]] == 0)
             {
                 std::vector<int> choices(p->choices);
 
-                choices[p->mstEdges[x]] = -1;
+                choices[p->mstEdges[x]] = 2;
                 
-                for (int y=0; y<x; y++)
+                for (size_t y=0; y<x; y++)
                     choices[p->mstEdges[y]] = 1;
 
                 Partition* nxt = createPartition(choices, g);
@@ -98,6 +98,8 @@ vector<Partition> solve(Graph g)
                 ks.push_back(*nxt);
             }
         }
+
+        delete p;
     }
 
     auto cmp = [](Partition l, Partition r) { return l.less(r); };
@@ -136,12 +138,14 @@ int main(int argc, char** argv)
     }
 
     int dupCount=0;
-    for (int i=0; i<ks.size(); i++) {
-        for (int j=i+1; j<ks.size(); j++) {
+    for (size_t i=0; i<ks.size(); i++) {
+        for (size_t j=i+1; j<ks.size(); j++) {
             if (ks[i].mstEdges == ks[j].mstEdges)
                 std::cout << ++dupCount << " Found duplicate\n";
         }
     }
+
+    delete[] adjMat;
 
     return 0;
 }
