@@ -1,0 +1,5 @@
+test0.txt - 10
+test1.txt - 19
+test2.txt - 226
+test3.txt - 5076
+trivial_test.txt - 1
