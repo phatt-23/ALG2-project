@@ -8,6 +8,6 @@ int Edge::compare(Edge rhs) const {
 }
 
 std::ostream& operator << (std::ostream& os, const Edge& e) {
-    os << "(" << e.nodeX << "-" << e.nodeY << "|" << e.weight << ")";
+    os << "(" << e.nodeX << "." << e.nodeY << "|" << e.weight << ")";
     return os;
 }

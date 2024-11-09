@@ -47,7 +47,7 @@ $(TARGET): $(OBJS)
 
 run: build
 	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
-	$(SHOW_CMD)./$(TARGET)
+	$(SHOW_CMD)./$(TARGET) ./TestData/KMinimalniKostryGrafu/Graph1.txt
 
 val: 
 	@echo "$(GREEN)$(BD_SYS) Running the executable with $(RED)$(<U>)Valgrind$(</U>). $(RESET)"
@@ -89,9 +89,13 @@ check:
 	@echo "$(RED)$(BD_SYS) Error: Non-valid rule ('$(MAKECMDGOALS)') provided.$(RESET)"
 
 ######
-test: build
+1: build
 	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
-	$(SHOW_CMD)./$(TARGET) ./TestData/KMinimalniKostryGrafu/Graph1.txt
+	$(SHOW_CMD)./$(TARGET) ./test/1.in 1
+
+2: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/2.in 1
 ######
 
 # colors and shit

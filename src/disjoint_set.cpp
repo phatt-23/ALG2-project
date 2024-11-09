@@ -19,21 +19,26 @@ void DisjointSet::reset() {
     }
 }
 
+// int DisjointSet::find(int nodeIndex) {
+//     // standard root finding
+//     int rootIndex = nodeIndex;
+//     while (rootIndex != nodes[rootIndex])
+//         rootIndex = nodes[rootIndex];
+//
+//     // path compression, compressing path leading to the rootIndex
+//     // extra work but will lead to amortized constant time complexity
+//     while (nodeIndex != rootIndex) {
+//         int nextIndex = nodes[nodeIndex];
+//         nodes[nodeIndex] = rootIndex;
+//         nodeIndex = nextIndex;
+//     }
+//
+//     return rootIndex;
+// }
 int DisjointSet::find(int nodeIndex) {
-    // standard root finding
-    int rootIndex = nodeIndex;
-    while (rootIndex != nodes[rootIndex])
-        rootIndex = nodes[rootIndex];
-
-    // path compression, compressing path leading to the rootIndex
-    // extra work but will lead to amortized constant time complexity
-    while (nodeIndex != rootIndex) {
-        int nextIndex = nodes[nodeIndex];
-        nodes[nodeIndex] = rootIndex;
-        nodeIndex = nextIndex;
-    }
-
-    return rootIndex;
+    if (nodes[nodeIndex] == nodeIndex)
+        return nodeIndex;
+    return nodes[nodeIndex] = find(nodes[nodeIndex]);
 }
 
 bool DisjointSet::nodesConnected(int nodeX, int nodeY) { 
@@ -44,23 +49,35 @@ int DisjointSet::componentSize(int node) {
     return sizes[find(node)]; 
 }
 
-void DisjointSet::unify(int nodeX, int  nodeY) {
-    // find roots of both nodes X and Y
-    int rootX = find(nodeX);
-    int rootY = find(nodeY);
-    
-    // if are the same no work needed, already in the same set
-    if (rootX == rootY) return;
+// void DisjointSet::unify(int nodeX, int  nodeY) {
+//     // find roots of both nodes X and Y
+//     int rootX = find(nodeX);
+//     int rootY = find(nodeY);
+//     
+//     // if are the same no work needed, already in the same set
+//     if (rootX == rootY) return;
+//
+//     // merge two component together, smaller comp to larger comp
+//     if (sizes[rootX] < sizes[rootY]) {
+//         sizes[rootY] += sizes[rootX];
+//         nodes[rootX] = rootY;
+//     } else {
+//         sizes[rootX] += sizes[rootY];
+//         nodes[rootY] = rootX;
+//     }
+//     
+//     // there is now one less components
+//     numberOfComponents--; 
+// }
 
-    // merge two component together, smaller comp to larger comp
-    if (sizes[rootX] < sizes[rootY]) {
-        sizes[rootY] += sizes[rootX];
-        nodes[rootX] = rootY;
-    } else {
-        sizes[rootX] += sizes[rootY];
-        nodes[rootY] = rootX;
-    }
-    
-    // there is now one less components
-    numberOfComponents--; 
+void DisjointSet::unify(int x, int  y) {
+    int a = find(x);
+    int b = find(y);
+    if (a==b) return;
+
+    numberOfComponents--;
+    if (sizes[a] == sizes[b])
+        sizes[nodes[b]=a]++;
+    else
+        nodes[a]=nodes[b]=sizes[a]<sizes[b]?b:a;
 }
