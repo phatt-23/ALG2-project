@@ -16,11 +16,13 @@ public:
     int mstCost;                // cost of the found MST
     std::vector<int> mstEdges;  // indexes in the list of edges
     
+    Partition(size_t edgeCount);
     Partition(std::vector<int> ch, int cost, std::vector<int> edges);
     // copy constructors
     Partition(const Partition& p) = default;
     Partition& operator=(const Partition& p) = default; 
-
+    
+    void Reset();
 
     std::string ToString() const override;
     std::string ToString(const Graph& g) const;

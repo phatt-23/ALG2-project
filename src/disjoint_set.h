@@ -15,6 +15,7 @@ public:
     size_t elemCount;          // number of elemes in whole set
     size_t numberOfComponents;
 
+    DisjointSet() = default;
     DisjointSet(size_t elemCount);
 
     void Reset();

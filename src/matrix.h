@@ -21,6 +21,7 @@ class Matrix : public IToString
     T* elements;
 
 public:
+    Matrix() = default;
     Matrix(size_t rows, size_t columns);
     Matrix(size_t rows, size_t columns, T* elements);
     ~Matrix() override;

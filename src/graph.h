@@ -12,8 +12,10 @@ class Graph : public IToString
     size_t vertexCount;
     size_t edgeCount;
     std::vector<Edge> edges;
-public:
 
+    std::vector<Edge> createEdges(const Matrix<int>& adjMat);
+public:
+    Graph() = default;
     Graph(size_t vertexCount, std::vector<Edge>& edges);
     Graph(const Matrix<int>& adjMatrix);
 

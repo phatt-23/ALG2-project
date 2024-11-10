@@ -5,6 +5,17 @@ Partition::Partition(std::vector<int> ch, int cost, std::vector<int> edges)
 : choices(ch), mstCost(cost), mstEdges(edges) 
 {}
 
+Partition::Partition(size_t edgeCount)
+: choices(std::vector<int>(edgeCount)), mstEdges(std::vector<int>(edgeCount)), mstCost(0)
+{}
+
+void Partition::Reset() {
+    this->choices.clear();
+    this->mstCost = 0;
+    this->mstEdges.clear();
+}
+
+
 std::string 
 Partition::ToString() const {
     std::stringstream ss;
