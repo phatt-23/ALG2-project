@@ -3,7 +3,7 @@
 Edge::Edge(int x, int y, int w) : nodeX(x), nodeY(y), weight(w) {}
 Edge::~Edge() = default;
 
-int Edge::compare(Edge rhs) const {
+int Edge::Compare(const Edge& rhs) const {
     return this->weight - rhs.weight;
 }
 

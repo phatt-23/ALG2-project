@@ -1,19 +1,18 @@
 #ifndef __EDGE_H
 #define __EDGE_H
 
-#include "comparable.h"
+#include "i_comparable.h"
 #include <ostream>
 
-class Edge : public Comparable<Edge>
+struct Edge : public IComparable<Edge>
 {
-public:
     int nodeX, nodeY, weight;
     
     Edge(int x, int y, int w);
     ~Edge() override;
 
-    int                     compare     (Edge rhs) const override;
-    friend std::ostream&    operator << (std::ostream& os, const Edge& e);
+    int Compare(const Edge& rhs) const override;
+    friend std::ostream& operator << (std::ostream& os, const Edge& e);
 };
 
 #endif//__EDGE_H

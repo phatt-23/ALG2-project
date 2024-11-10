@@ -1,50 +1,43 @@
 #include "helper.h"
+#include <cassert>
 #include <iostream>
-#include <ostream>
 #include <algorithm>
 #include <fstream>
 
-int* readInAdjMatrix(std::ifstream& inputStream, size_t numOfVert) {
-    int* adjMat = new int[numOfVert * numOfVert];
-    
+Matrix<int> 
+readAdjacencyMatrix(std::ifstream& inputStream) 
+{
+    size_t numOfVert = 0;
+    inputStream >> numOfVert;
+
     // read in
-    for (size_t row = 0; row < numOfVert; ++row) {
-        for (size_t col = 0; col < numOfVert; ++col) {
-            inputStream >> adjMat[row * numOfVert + col];
-        }
-    }
+    int* elems = new int[numOfVert * numOfVert];
+    for (size_t i = 0; i < numOfVert * numOfVert; ++i)
+        inputStream >> elems[i];
     
-    // debug print
-    std::cout << "|V| = " << numOfVert << '\n';
-    for (size_t row = 0; row < numOfVert; ++row) {
-        std::cout << "v_" << row << " = ";
-        for (size_t col = 0; col < numOfVert; ++col) {
-            std::cout << adjMat[row * numOfVert + col] << " ";
-        }
-        std::cout << '\n';
-    }
+    auto adjMat = Matrix<int>(numOfVert, numOfVert, elems);
 
     return adjMat;
 }
 
-std::vector<Edge> createEdges(const int* adjMat, int numOfVert) {
+std::vector<Edge> 
+createEdges(const Matrix<int>& adjMat) 
+{
+    assert(adjMat.Rows() == adjMat.Columns() && "Must be square matrix");
+
     std::vector<Edge> edges;
+    size_t numOfVert = adjMat.Rows();
     
-    // create
+    // create edges from adjMat
     for (size_t row = 0; row < numOfVert; ++row) {
         for (size_t col = row + 1; col < numOfVert; ++col) {
-            int weight = adjMat[row * numOfVert + col];
+            int weight = adjMat.Get(row, col);
             if (weight == 0) continue;
             edges.push_back(Edge(row, col, weight));
         }
     }
     
-    std::sort(edges.begin(), edges.end(), [](Edge& l, Edge& r) { return l.less(r); });
-    
-    // print
-    int ptr = 0;
-    for (const Edge& e : edges)
-        std::cout << "[" << ptr++ << "]\t" << e << '\n';
-    
+    std::sort(edges.begin(), edges.end(), [](Edge& l, Edge& r) { return l.Less(r); });
+ 
     return edges;
 }

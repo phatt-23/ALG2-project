@@ -1,7 +1,7 @@
 # MAKEFILE FOR C/C++ PROJECTS
 # common
 CC					:= clang++
-CFLAGS				:= -std=c++23 -Wall -Wextra -g  # -Qunused-arguments # -std=c23
+CFLAGS				:= -std=c++23 -Wall -Wextra -g -O3 # -Qunused-arguments # -std=c23
 LDFLAGS   			:= -lpthread -lm
 SHOW_CMD  			?=#@
 
@@ -89,13 +89,34 @@ check:
 	@echo "$(RED)$(BD_SYS) Error: Non-valid rule ('$(MAKECMDGOALS)') provided.$(RESET)"
 
 ######
-1: build
+3: build
 	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
-	$(SHOW_CMD)./$(TARGET) ./test/1.in 1
+	$(SHOW_CMD)./$(TARGET) ./test/3.in 1
 
-2: build
+4: build
 	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
-	$(SHOW_CMD)./$(TARGET) ./test/2.in 1
+	$(SHOW_CMD)./$(TARGET) ./test/4.in 1
+
+9: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/9.in 1
+
+10: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/10.in 1
+
+15: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/15.in 1
+
+20: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/20.in 0
+
+30: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/30.in 0
+
 ######
 
 # colors and shit
