@@ -2,14 +2,13 @@
 #include "graph.h"
 #include "helper.h"
 
-#include <cstddef>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <ostream>
 #include <vector>
 
-int main(int argc, char** argv) 
+int main(const int argc, const char** argv) 
 {
     using std::cout;
 
@@ -17,37 +16,47 @@ int main(int argc, char** argv)
         cout << "Usage:\n";
         cout << "    kthmst <input_file> <print_bool>\n"; 
         cout << "        input_file        adjacent matrix\n"; 
-        cout << "        print_bool        print all trees (slow IO)\n"; 
+        cout << "        print_type        0 - nothing\n"; 
+        cout << "                          1 - only kth\n"; 
+        cout << "                          2 - all\n"; 
         return 0;
     }
     
-    std::ifstream input(argv[1]); // read in the adjacencyMartix
-
-    Matrix<int> adjMat = readAdjacencyMatrix(input);
-
-    Graph g(adjMat); // graph with useful to pass around
-    cout << g.ToString();
     
-    if (!g.VertexCount() || !g.EdgeCount()) {
+    // read in the adjacencyMartix
+    std::ifstream input(argv[1]); 
+
+    Matrix<int> adjMat = Helper::readAdjacencyMatrix(input);
+
+    // graph with useful to pass around
+    Graph graph(adjMat); 
+    cout << graph.ToString();
+
+    if (!graph.VertexCount() || !graph.EdgeCount()) {
         cout << "ERROR: Cannot solve for a tree with no vertices or edges...\n";
         return 0;
     }
 
-    std::vector<Partition> ks = solve(g); // minimal spanning trees
+    // minimal spanning trees
+    std::vector<Partition> ks = Helper::solve(graph); 
 
-    cout << "Found " << ks.size() << " trees, from cost of " 
-         << ks.front().mstCost << " to " << ks.back().mstCost << "\n";
-
-    if (atoi(argv[2]) == 1) { // if the third argument is 1, then print trees
-        for (size_t i=0; i<ks.size(); ++i) {
-            cout << "[" << i << "]\n";
-            cout << ks[i].ToString(g) << "\n";
-        }
-    }
+    int mode = atoi(argv[2]);
+    Helper::PrintTrees(ks, graph, mode);
     
-    testTrees(ks, g); // if any non-trees, prints them out
-    testDups(ks); // if finds any, prints them out
+    // if any non-trees, prints them out
+    Helper::testTrees(ks, graph); 
    
+
+    // if finds any, prints them out
+    Helper::testDups(ks); 
+  
+    Helper::writeToHtml(
+        "treeees.html", 
+        "./html-builder/head.html", 
+        "./html-builder/tail.html", 
+        mode, graph, ks
+    );
+
     return 0;
 }
 

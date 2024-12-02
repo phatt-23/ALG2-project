@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Tree Visualization</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin: 20px;
+    }
+    svg {
+      border: 1px solid #ddd;
+      margin: 10px;
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <script>
+const vertexCount = 9;
+const trees = [
+[
+{ source: 0, target: 3, cost: 1},
+{ source: 1, target: 4, cost: 1},
+{ source: 3, target: 6, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 0, target: 1, cost: 2},
+{ source: 2, target: 4, cost: 3},
+{ source: 6, target: 8, cost: 3},
+{ source: 6, target: 7, cost: 4},
+],
+[
+{ source: 0, target: 3, cost: 1},
+{ source: 1, target: 4, cost: 1},
+{ source: 3, target: 6, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 0, target: 1, cost: 2},
+{ source: 6, target: 8, cost: 3},
+{ source: 0, target: 2, cost: 4},
+{ source: 6, target: 7, cost: 4},
+],
+[
+{ source: 0, target: 3, cost: 1},
+{ source: 1, target: 4, cost: 1},
+{ source: 3, target: 6, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 0, target: 1, cost: 2},
+{ source: 6, target: 8, cost: 3},
+{ source: 6, target: 7, cost: 4},
+{ source: 1, target: 2, cost: 5},
+],
+[
+{ source: 0, target: 3, cost: 1},
+{ source: 1, target: 4, cost: 1},
+{ source: 3, target: 6, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 0, target: 1, cost: 2},
+{ source: 0, target: 2, cost: 4},
+{ source: 6, target: 7, cost: 4},
+{ source: 2, target: 8, cost: 5},
+],
+[
+{ source: 0, target: 3, cost: 1},
+{ source: 1, target: 4, cost: 1},
+{ source: 3, target: 6, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 6, target: 8, cost: 3},
+{ source: 0, target: 2, cost: 4},
+{ source: 6, target: 7, cost: 4},
+{ source: 1, target: 2, cost: 5},
+],
+[
+{ source: 0, target: 3, cost: 1},
+{ source: 3, target: 6, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 0, target: 1, cost: 2},
+{ source: 6, target: 8, cost: 3},
+{ source: 4, target: 8, cost: 4},
+{ source: 6, target: 7, cost: 4},
+{ source: 1, target: 2, cost: 5},
+],
+[
+{ source: 0, target: 3, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 0, target: 1, cost: 2},
+{ source: 2, target: 4, cost: 3},
+{ source: 6, target: 8, cost: 3},
+{ source: 0, target: 2, cost: 4},
+{ source: 4, target: 8, cost: 4},
+{ source: 6, target: 7, cost: 4},
+],
+[
+{ source: 0, target: 3, cost: 1},
+{ source: 1, target: 4, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 2, target: 4, cost: 3},
+{ source: 0, target: 2, cost: 4},
+{ source: 4, target: 8, cost: 4},
+{ source: 6, target: 7, cost: 4},
+{ source: 0, target: 6, cost: 5},
+],
+[
+{ source: 1, target: 4, cost: 1},
+{ source: 3, target: 6, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 2, target: 4, cost: 3},
+{ source: 4, target: 8, cost: 4},
+{ source: 6, target: 7, cost: 4},
+{ source: 0, target: 6, cost: 5},
+{ source: 4, target: 6, cost: 5},
+],
+[
+{ source: 0, target: 3, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 0, target: 1, cost: 2},
+{ source: 2, target: 4, cost: 3},
+{ source: 0, target: 2, cost: 4},
+{ source: 6, target: 7, cost: 4},
+{ source: 0, target: 6, cost: 5},
+{ source: 2, target: 8, cost: 5},
+],
+[
+{ source: 0, target: 3, cost: 1},
+{ source: 1, target: 4, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 0, target: 2, cost: 4},
+{ source: 6, target: 7, cost: 4},
+{ source: 0, target: 6, cost: 5},
+{ source: 1, target: 2, cost: 5},
+{ source: 2, target: 8, cost: 5},
+],
+[
+{ source: 3, target: 6, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 0, target: 1, cost: 2},
+{ source: 4, target: 8, cost: 4},
+{ source: 6, target: 7, cost: 4},
+{ source: 1, target: 2, cost: 5},
+{ source: 2, target: 8, cost: 5},
+{ source: 4, target: 6, cost: 5},
+],
+[
+{ source: 3, target: 6, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 2, target: 4, cost: 3},
+{ source: 0, target: 2, cost: 4},
+{ source: 6, target: 7, cost: 4},
+{ source: 1, target: 2, cost: 5},
+{ source: 2, target: 8, cost: 5},
+{ source: 4, target: 6, cost: 5},
+],
+[
+{ source: 3, target: 6, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 6, target: 8, cost: 3},
+{ source: 6, target: 7, cost: 4},
+{ source: 0, target: 4, cost: 5},
+{ source: 1, target: 2, cost: 5},
+{ source: 2, target: 8, cost: 5},
+{ source: 4, target: 6, cost: 5},
+],
+[
+{ source: 0, target: 3, cost: 1},
+{ source: 5, target: 8, cost: 1},
+{ source: 4, target: 8, cost: 4},
+{ source: 6, target: 7, cost: 4},
+{ source: 0, target: 4, cost: 5},
+{ source: 1, target: 2, cost: 5},
+{ source: 2, target: 8, cost: 5},
+{ source: 4, target: 6, cost: 5},
+],
+];
+</script>
+<script>
+    // Function to generate a grid layout for vertices
+    function generateNodePositions(vertexCount, width, height) {
+        const sqrt = Math.ceil(Math.sqrt(vertexCount));
+        const spacingX = width / (sqrt + 1);
+        const spacingY = height / (sqrt + 1);
+        const positions = [];
+
+        for (let i = 0; i < vertexCount; i++) {
+            const row = Math.floor(i / sqrt);
+            const col = i % sqrt;
+            positions.push({
+                id: i,
+                x: (col + 1) * spacingX,
+                y: (row + 1) * spacingY
+            });
+        }
+        return positions;
+    }
+
+    const treeWidth = 300;
+    const treeHeight = 300;
+
+    trees.forEach((edges, index) => {
+        const svg = d3.select("body")
+            .append("svg")
+            .attr("width", treeWidth)
+            .attr("height", treeHeight);
+
+        const nodePositions = generateNodePositions(vertexCount, treeWidth, treeHeight);
+
+        // Draw edges
+        svg.selectAll("path")
+            .data(edges)
+            .enter()
+            .append("path")
+            .attr("d", d => {
+                const source = nodePositions[d.source];
+                const target = nodePositions[d.target];
+                const midX = (source.x + target.x) / 2;
+                const midY = (source.y + target.y) / 2 - 40;
+                return `M${source.x},${source.y} Q${midX},${midY} ${target.x},${target.y}`;
+            })
+            .attr("stroke", "gray")
+            .attr("stroke-width", 2)
+            .attr("fill", "none");
+
+
+        // Draw nodes
+        svg.selectAll("circle")
+            .data(nodePositions)
+            .enter()
+            .append("circle")
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", 15)
+            .attr("fill", "lightblue")
+            .attr("stroke", "black");
+
+        // Add node labels
+        svg.selectAll(".node-label")
+            .data(nodePositions)
+            .enter()
+            .append("text")
+            .attr("x", d => d.x)
+            .attr("y", d => d.y + 4) // Center vertically inside the circle
+            .attr("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .attr("fill", "black")
+            .text(d => d.id);
+
+        const totalCost = edges.reduce((sum, edge) => sum + edge.cost, 0);
+
+        // Add title
+        svg.append("text")
+            .attr("x", treeWidth / 2)
+            .attr("y", 20)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "16px")
+            .attr("font-weight", "bold")
+            .text(`Tree ${index + 1}, Cost: ${totalCost}`);
+
+
+        // Add edge labels with background
+        // /*
+        svg.selectAll(".edge-label")
+            .data(edges)
+            .enter()
+            .append("g") // Group to handle both text and rectangle together
+            .each(function (d) {
+                const source = nodePositions[d.source];
+                const target = nodePositions[d.target];
+
+                const xPos = (source.x + target.x) / 2;
+                const yPos = (source.y + target.y) / 2 - 10;
+
+                // Create a background rectangle for the label
+                d3.select(this)
+                    .append("rect")
+                    .attr("x", xPos - 5)    // Offset for padding
+                    .attr("y", yPos - 8)    // Offset for padding
+                    .attr("width", 10)      // Width of the rectangle
+                    .attr("height", 10)     // Height of the rectangle
+                    .attr("fill", "gray")   // Background color of the label
+
+                // Add the edge label text
+                d3.select(this)
+                    .append("text")
+                    .attr("x", xPos)
+                    .attr("y", yPos)
+                    .attr("text-anchor", "middle")
+                    .attr("font-size", "10px")
+                    .attr("fill", "white")
+                    .text(d.cost);
+            });
+        // */
+
+    });
+</script>
+</body>
+
+</html>

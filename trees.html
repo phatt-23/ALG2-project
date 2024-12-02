@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Tree Viewer</title>
+    <style>
+        /* Styling for the SVG container */
+        svg {
+            border: 1px solid #ccc;
+            display: block;
+            margin: 20px auto;
+        }
+        .slider-container {
+            text-align: center;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Slider to control tree display -->
+    <div class="slider-container">
+        <label for="treeSlider">Select Tree:</label>
+        <input type="range" id="treeSlider" min="0" max="523" step="1" value="0">
+        <p>Tree Number: <span id="treeNumber">0</span></p>
+    </div>
+
+    <!-- SVG Container to display the graph -->
+    <svg id="graphContainer" width="600" height="600"></svg>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script>
+        // Dummy tree data (replace with your actual data)
+        const trees = [
+            {
+                cost: 16,
+                edges: [
+                    { source: 0, target: 1, cost: 1 },
+                    { source: 1, target: 2, cost: 2 },
+                    { source: 2, target: 3, cost: 3 }
+                ],
+                nodes: [0, 1, 2, 3]
+            },
+            {
+                cost: 17,
+                edges: [
+                    { source: 0, target: 1, cost: 1 },
+                    { source: 1, target: 2, cost: 2 },
+                    { source: 2, target: 3, cost: 3 },
+                    { source: 3, target: 4, cost: 4 }
+                ],
+                nodes: [0, 1, 2, 3, 4]
+            },
+            // Add more trees here as needed
+        ];
+
+        const svg = d3.select("#graphContainer");
+
+        // Function to draw a single tree
+        function drawTree(tree) {
+            svg.selectAll("*").remove(); // Clear previous graph
+
+            const nodeRadius = 20;
+            const width = 600, height = 600;
+
+            // Create a force simulation for the tree layout
+            const simulation = d3.forceSimulation(tree.nodes)
+                .force("link", d3.forceLink(tree.edges).id(d => d).distance(100))
+                .force("charge", d3.forceManyBody().strength(-200))
+                .force("center", d3.forceCenter(width / 2, height / 2));
+
+            // Draw the edges (links between nodes)
+            svg.selectAll(".edge")
+                .data(tree.edges)
+                .enter()
+                .append("line")
+                .attr("class", "edge")
+                .attr("x1", d => tree.nodes[d.source].x)
+                .attr("y1", d => tree.nodes[d.source].y)
+                .attr("x2", d => tree.nodes[d.target].x)
+                .attr("y2", d => tree.nodes[d.target].y)
+                .attr("stroke", "#ccc")
+                .attr("stroke-width", 2);
+
+            // Draw the nodes
+            const node = svg.selectAll(".node")
+                .data(tree.nodes)
+                .enter()
+                .append("circle")
+                .attr("class", "node")
+                .attr("r", nodeRadius)
+                .attr("fill", "#69b3a2");
+
+            // Add labels to nodes
+            svg.selectAll(".nodeLabel")
+                .data(tree.nodes)
+                .enter()
+                .append("text")
+                .attr("class", "nodeLabel")
+                .attr("x", d => d.x)
+                .attr("y", d => d.y)
+                .attr("text-anchor", "middle")
+                .attr("dy", -25)
+                .text(d => d);
+
+            // Update the positions of nodes and edges
+            simulation.on("tick", function() {
+                svg.selectAll(".node")
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+                svg.selectAll(".edge")
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+            });
+        }
+
+        // Event listener for the slider to change the tree
+        document.getElementById("treeSlider").addEventListener("input", function() {
+            const treeIndex = this.value;
+            document.getElementById("treeNumber").innerText = treeIndex;
+            drawTree(trees[treeIndex]); // Update tree visualization
+        });
+
+        // Initial drawing of the first tree
+        drawTree(trees[0]);
+    </script>
+</body>
+</html>
+

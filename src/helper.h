@@ -1,5 +1,5 @@
-#ifndef __HELPER_SHIT_H
-#define __HELPER_SHIT_H
+#ifndef __HELPER_H
+#define __HELPER_H
 
 #include "edge.h"
 #include "matrix.h"
@@ -8,16 +8,54 @@
 #include <istream>
 #include <vector>
 
-Matrix<int> readAdjacencyMatrix(std::ifstream& inputStream);
+class Helper 
+{
+public:
+    static void writeAllTrees(
+        std::ofstream& output, 
+        const Graph& graph, 
+        const std::vector<Partition>& ks
+    );
 
-std::vector<Edge> createEdges(const Matrix<int>& adjMat);
+    static void writeOnlyKth(
+        std::ofstream& output, 
+        const Graph& graph, 
+        const std::vector<Partition>& ks
+    );
+    
+    static Matrix<int> readAdjacencyMatrix(std::ifstream& inputStream);
 
-Partition* createPartition(const std::vector<int>& choices, const Graph& g, DisjointSet& ds);
+    static std::vector<Edge> createEdges(const Matrix<int>& adjMat);
 
-std::vector<Partition> solve(Graph g);
+    static Partition* createPartition(
+        const std::vector<int>& choices, 
+        const Graph& g, 
+        DisjointSet& ds
+    );
 
-void testDups(const std::vector<Partition>& kts);
+    static std::vector<Partition> solve(const Graph& g);
 
-void testTrees(const std::vector<Partition>& ks, const Graph& g);
+    static void PrintTrees(
+        const std::vector<Partition>& ks, 
+        const Graph& graph, 
+        int mode
+    );
 
-#endif//__HELPER_SHIT_H
+    static void testDups(const std::vector<Partition>& kts);
+
+    static void testTrees(
+        const std::vector<Partition>& ks, 
+        const Graph& g
+    );
+
+    static void writeToHtml(
+        const char* outputPath, 
+        const char* headPath, 
+        const char* tailPath, 
+        const int mode,
+        const Graph& g,
+        const std::vector<Partition>& ks
+    );
+};
+
+#endif//__HELPER_H

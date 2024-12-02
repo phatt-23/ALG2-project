@@ -88,37 +88,6 @@ check:
 %:
 	@echo "$(RED)$(BD_SYS) Error: Non-valid rule ('$(MAKECMDGOALS)') provided.$(RESET)"
 
-######
-3: build
-	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
-	$(SHOW_CMD)./$(TARGET) ./test/3.in 1
-
-4: build
-	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
-	$(SHOW_CMD)./$(TARGET) ./test/4.in 1
-
-9: build
-	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
-	$(SHOW_CMD)./$(TARGET) ./test/9.in 1
-
-10: build
-	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
-	$(SHOW_CMD)./$(TARGET) ./test/10.in 1
-
-15: build
-	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
-	$(SHOW_CMD)./$(TARGET) ./test/15.in 1
-
-20: build
-	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
-	$(SHOW_CMD)./$(TARGET) ./test/20.in 0
-
-30: build
-	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
-	$(SHOW_CMD)./$(TARGET) ./test/30.in 0
-
-######
-
 # colors and shit
 BOLD    	:= $(shell tput bold)
 <U>     	:= $(shell tput smul)
@@ -134,4 +103,93 @@ CYAN    	:= $(shell tput setaf 6)
 WHITE   	:= $(shell tput setaf 7)
 TAB     	:= $(shell echo -e "\t")
 BD_SYS  	:= $(BOLD)"[$(<U>)BUILD$(</U>)]"
+
+
+
+
+
+# Tree Examples 
+3: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/3.in 0
+3k: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/3.in 1
+3a: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/3.in 2
+
+
+
+4: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/4.in 0
+4k: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/4.in 1
+4a: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/4.in 2
+
+
+
+9: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/9.in 0
+9k: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/9.in 1
+9a: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/9.in 2
+
+
+
+10: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/10.in 0
+10k: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/10.in 1
+10a: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/10.in 2
+
+
+
+15: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/15.in 0
+15k: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/15.in 1
+15a: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/15.in 2
+
+
+
+20: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/20.in 0
+20k: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/20.in 1
+20a: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/20.in 2
+
+
+
+30: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/30.in 0
+30k: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/30.in 1
+30a: build
+	@echo "$(GREEN)$(BD_SYS) Running the executable. $(RESET)"
+	$(SHOW_CMD)./$(TARGET) ./test/30.in 2
+
+
 
