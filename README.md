@@ -1,8 +1,5 @@
 # Algorithms II
 
-# TODO:
-Add doxyyyyygeeeeeennnnnnnn fuuuuuuuuuuuaaaaaaaaaaaaaaccccccc.
-
 [https://www.cs.vsb.cz/dvorsky/Algorithms_II.html]
 
 Implementation of project 1.
@@ -13,13 +10,14 @@ To try out this program.
 There are examples prepared.
 
 But first build the project by simply calling a Makefile.
+(using more cores)
 ```
-make
+make -j 5
 ```
 
 There's also the file `./treeees.html`
 that you can open in the browser
-and look at the graphs.
+and look at the found MSTs.
 
 ### Examples
 
