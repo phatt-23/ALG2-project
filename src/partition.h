@@ -1,33 +1,41 @@
 #ifndef __PARTITION_H
 #define __PARTITION_H
 
-#include "i_comparable.h"
-#include "i_to_string.h"
-#include "graph.h"
+#include "i_comparable.h"  
+#include "i_to_string.h"   
+#include "graph.h"         
 #include <ostream>
 #include <string>
 #include <vector>
 #include <iostream>
 
+/// @brief Represents a partition of edges in a graph.
 struct Partition : public IComparable<Partition>, public IToString
 {
 public:
     std::vector<int> choices;   // 0, 1 or -1 per edge
-    int mstCost;                // cost of the found MST
-    std::vector<int> mstEdges;  // indexes in the list of edges
-    
+    int mstCost;                // Cost of the found MST
+    std::vector<int> mstEdges;  // Indexes in the list of edges
+
+    /// @brief Constructor that initializes a partition with a specified edge count.
     Partition(size_t edgeCount);
+
+    /// @brief Constructor that initializes a partition with given choices, cost, and edges.
     Partition(std::vector<int> ch, int cost, std::vector<int> edges);
-    // copy constructors
+
+    // Copy constructors
     Partition(const Partition& p) = default;
     Partition& operator=(const Partition& p) = default; 
-    
+
+    /// @brief Resets the partition to its initial state.
     void Reset();
 
-    std::string ToString() const override;
-    std::string ToString(const Graph& g) const;
+    std::string ToString() const override;                    // String representation
+    std::string ToString(const Graph& g) const;               // String with graph info
+
+    int Compare(const Partition& rhs) const override;         // Compare based on MST cost
     
-    int Compare(const Partition& rhs) const override;
+    // Comparison operators
     bool operator < (const Partition& r) const;
     bool operator > (const Partition& r) const;
     bool operator <= (const Partition& r) const;
@@ -35,7 +43,8 @@ public:
     bool operator == (const Partition& r) const;
     bool operator != (const Partition& r) const;
 
+    /// @brief Outputs the partition details to an output stream.
     friend std::ostream& operator << (std::ostream& os, const Partition& p);
 };
 
-#endif//__PARTITION_H
+#endif // __PARTITION_H

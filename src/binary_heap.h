@@ -9,44 +9,72 @@
 #include <iostream>
 #include <utility>
 
+/// Macro to define a template class for BinaryHeap.
 #define MACRO_BINARY_HEAP_TEMPLATE_CLASS(type_letter, comp_func) \
     template <typename type_letter, typename comp_func = std::less<type_letter>>
 
+/// Macro to define a template for BinaryHeap.
 #define MACRO_BINARY_HEAP_TEMPLATE(type_letter, comp_func) \
     template <typename type_letter, typename comp_func>
 
-/// Binary heap for numerical types or 
-/// any type implementing comparison operations.
-MACRO_BINARY_HEAP_TEMPLATE_CLASS(T,F)
+/// @brief A Binary Heap implementation supporting custom comparator functions.
+/// @tparam T The type of elements stored in the heap.
+/// @tparam F The type of the comparator function.
+MACRO_BINARY_HEAP_TEMPLATE_CLASS(T, F)
 class BinaryHeap
 {
 private:
-    std::vector<T> heap_vec;
-    F comp;
+    std::vector<T> heap_vec; ///< Internal storage for the heap.
+    F comp; ///< Comparator function for heap ordering.
 
+    /// Maintains the heap property starting from a given parent index.
     void heapify(int parent_index);
+
+    /// Builds the heap by heapifying all nodes.
     void build_heap();
 
 public:
+    /// @brief Default constructor.
+    /// @param compare Custom comparator function (default: `std::less<T>`).
     BinaryHeap(F compare = F()) 
         : heap_vec{std::vector<T>()}, comp(compare) {}
 
+    /// @brief Constructor with initial data.
+    /// @param inputData Vector to initialize the heap with.
+    /// @param compare Custom comparator function (default: `std::less<T>`).
     BinaryHeap(std::vector<T>& inputData, F compare = F())
         : heap_vec{inputData}, comp(compare) {}
 
     ~BinaryHeap() = default;
-    
+
+    /// @brief Provides access to the underlying heap vector.
+    /// @return Reference to the vector representing the heap.
     const std::vector<T>& HeapVec() const;
 
+    /// @brief Inserts a new element into the heap.
+    /// @param elem The element to insert.
     void Insert(T elem);
+
+    /// @brief Checks if the heap is empty.
+    /// @return `true` if the heap is empty, otherwise `false`.
     bool Empty() const;
+
+    /// @brief Removes and returns the root element of the heap.
+    /// @return The root element.
+    /// @throws std::out_of_range If the heap is empty.
     T Poll();
+
+    /// @brief Returns the root element of the heap without removing it.
+    /// @return The root element.
+    /// @throws std::out_of_range If the heap is empty.
     const T& Peek() const;
-    
-    MACRO_BINARY_HEAP_TEMPLATE(U,C)
-    friend std::ostream& operator << (std::ostream& os, const BinaryHeap<U,C>& bh);
+
+    /// @brief Friend function for printing the heap to an output stream.
+    MACRO_BINARY_HEAP_TEMPLATE(U, C)
+    friend std::ostream& operator << (std::ostream& os, const BinaryHeap<U, C>& bh);
 };
 
+/// Implementation of member functions.
 template<typename T, typename F>
 const std::vector<T>& BinaryHeap<T,F>::HeapVec() const { return this->heap_vec; }
 

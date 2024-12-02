@@ -109,10 +109,11 @@ Helper::solve(const Graph& graph)
     return ks;
 }
 
-#else//BENCHMARK_PQ
+#else //BENCHMARK_MY_PRIORITY_QUEUE
+#include "binary_heap.h"
 
 std::vector<Partition>
-solve(Graph g) 
+Helper::solve(const Graph& g) 
 {
     std::vector<Partition> ks;
     DisjointSet ds(g.VertexCount());
@@ -160,7 +161,7 @@ solve(Graph g)
     return ks;
 }
 
-#endif//BENCHMARK_PQ
+#endif //BENCHMARK_MY_PRIORITY_QUEUE
 
 /// Finds the MST of the given search space.
 /// If no tree is possible to construct given 
