@@ -2,6 +2,8 @@
 #include "partition.h"
 #include "graph.h"
 #include "disjoint_set.h"
+#include "binary_heap.h"
+
 #include <cassert>
 #include <cstdio>
 #include <iostream>
@@ -48,172 +50,152 @@ Helper::createEdges(const Matrix<int>& adjMat)
     return edges;
 }
 
-
-
-
 /// Finds all the spanning trees and puts
 /// them into an array ordered ascendingly 
 /// by their cost.
-
-#define USE_STL_PRIORITY_QUEUE
-#ifdef USE_STL_PRIORITY_QUEUE
-
-#include <queue>
 std::vector<Partition>
 Helper::solve(const Graph& graph) 
 {
-    std::vector<Partition> ks;
-    DisjointSet ds(graph.VertexCount());
-
-    auto partCmp = [](const Partition* l, const Partition* r) { return l->Less(*r); };
-    auto q = std::priority_queue<Partition*, std::vector<Partition*>, decltype(partCmp)>(partCmp);
+    // Storage for the MSTs.
+    std::vector<Partition> spanningTrees;          
     
-    std::vector<int> initChoices(graph.EdgeCount());
-    fill(initChoices.begin(), initChoices.end(), 0);
+    // Shared among all iterations, stores found vertices.
+    // Used in the createPartition function for Kruskal's.
+    DisjointSet<int> disjointSet(graph.VertexCount());    
 
-    Partition* mst = createPartition(initChoices, graph, ds);
-    ks.push_back(*mst);
-    q.push(mst); 
+    // Ordinary binary heap to store the partitions 
+    // (search spaces - holds info about the spanning tree)
+    // in a way, so that its always ready to serve the partition
+    // with the least mstCost.
+    auto partCmp = [](const Partition* l, const Partition* r) { 
+        return l->Less(*r); 
+    };
+    auto partitions = BinaryHeap<Partition*, decltype(partCmp)>(partCmp);    
+    
+    // Initial state is choice where all the edges all not assessed.
+    std::vector<int> initChoices(graph.EdgeCount());                    
+    fill(initChoices.begin(), initChoices.end(), Partition::NOT_ASSESSED);
 
-    while (!q.empty()) 
+    // Find the actual MST, put it in the storage of STs
+    Partition* mst = createPartition(initChoices, graph, disjointSet);
+    spanningTrees.push_back(*mst);
+    partitions.Insert(mst); 
+
+    // while all the search spaces still werent 
+    // searched through, continue searching
+    while (!partitions.Empty()) 
     {
-        Partition* p = q.top();
-        q.pop();
+        // search this partition's search space
+        Partition* part = partitions.Poll();
         
-        for (size_t x=0; x<graph.VertexCount()-1; x++) 
+        // make a new choice describing the search space
+        // and see if a spanning tree is possible in this space
+        // if yes, add it to the mstList 
+        for (size_t x = 0; x < graph.VertexCount() - 1; x++) 
         {
-            if (p->choices[p->mstEdges[x]] == 0)
+            // matches the first still not assessed choice
+            // and evaluates this space
+            if (part->choices[part->mstEdges[x]] == Partition::EdgeChoice::NOT_ASSESSED)
             {
-                std::vector<int> choices(p->choices);
+                // copy the choices of the previous iteration
+                std::vector<int> choices(part->choices);
 
-                choices[p->mstEdges[x]] = 3;
+                // mark current as excluded and try a tree is possible
+                choices[part->mstEdges[x]] = Partition::EdgeChoice::EXCLUDED;
                 
-                for (size_t y=0; y<x; y++)
-                    choices[p->mstEdges[y]] = 1;
+                // mark all the previous choices that had already been assessed
+                for (size_t y = 0; y < x; y++)
+                    choices[part->mstEdges[y]] = Partition::EdgeChoice::INCLUDED;
 
-                Partition* nxt = createPartition(choices, graph, ds);
-                if (nxt == nullptr)
+                // try find a spanning tree
+                Partition* nxt = createPartition(choices, graph, disjointSet);
+                
+                // if the nxt pointer is nulled then no spanning tree was found 
+                if (nxt == nullptr) 
                     continue;
 
-                q.push(nxt); 
-                ks.push_back(*nxt);
+                // otherwise insert the newly found spanning tree into the heap
+                // and add it to the list of valid spanning trees
+                partitions.Insert(nxt); 
+                spanningTrees.push_back(*nxt);
             }
         }
-
-        delete p;
-    }
-
-    auto cmp = [](const Partition& l, const Partition& r) { return l.Less(r); };
-    sort(ks.begin(), ks.end(), cmp);
-
-    return ks;
-}
-
-#else //BENCHMARK_MY_PRIORITY_QUEUE
-#include "binary_heap.h"
-
-std::vector<Partition>
-Helper::solve(const Graph& g) 
-{
-    std::vector<Partition> ks;
-    DisjointSet ds(g.VertexCount());
-
-    auto partCmp = [](const Partition* l, const Partition* r) { return l->Less(*r); };
-    auto q = BinaryHeap<Partition*, decltype(partCmp)>(partCmp);
-    
-    std::vector<int> initChoices(g.EdgeCount());
-    fill(initChoices.begin(), initChoices.end(), 0);
-
-    Partition* mst = createPartition(initChoices, g, ds);
-    ks.push_back(*mst);
-    q.Insert(mst); 
-
-    while (!q.Empty()) 
-    {
-        Partition* p = q.Poll();
         
-        for (size_t x=0; x<g.VertexCount()-1; x++) 
-        {
-            if (p->choices[p->mstEdges[x]] == 0)
-            {
-                std::vector<int> choices(p->choices);
-
-                choices[p->mstEdges[x]] = 3;
-                
-                for (size_t y=0; y<x; y++)
-                    choices[p->mstEdges[y]] = 1;
-
-                Partition* nxt = createPartition(choices, g, ds);
-                if (nxt == nullptr)
-                    continue;
-
-                q.Insert(nxt); 
-                ks.push_back(*nxt);
-            }
-        }
-
-        delete p;
+        // the partition is not needed anymore as this space was already searched
+        delete part;
     }
 
-    auto cmp = [](const Partition& l, const Partition& r) { return l.Less(r); };
-    sort(ks.begin(), ks.end(), cmp);
+    // sort them by mstWeight and return the list (vector)
+    sort(spanningTrees.begin(), spanningTrees.end(), 
+        [](const Partition& l, const Partition& r){ return l.Less(r); });
 
-    return ks;
+    return spanningTrees;
 }
-
-#endif //BENCHMARK_MY_PRIORITY_QUEUE
 
 /// Finds the MST of the given search space.
 /// If no tree is possible to construct given 
 /// the search space, nullptr is returned.
 /// Using Kruskal's algorithm.
 Partition* 
-Helper::createPartition(const std::vector<int>& choices, const Graph& graph, DisjointSet& ds) 
+Helper::createPartition(const std::vector<int>& choices, const Graph& graph, DisjointSet<int>& ds) 
 {
-    ds.Reset(); // resets the disjoint set, using the same memory again
+    ds.Reset(); // Resets the disjoint set, reusing the same memory again.
     
     int mstCost = 0;
     std::vector<int> mstEdges(graph.VertexCount() - 1);
-    std::fill(mstEdges.begin(), mstEdges.end(), -1);
+    std::fill(mstEdges.begin(), mstEdges.end(), -1); // first fill in with -1
 
     int eIdx = 0;
-    for (size_t x=0; x<graph.EdgeCount(); x++)
+    
+    // Add all the edges that are set to be included.
+    for (size_t i = 0; i < graph.EdgeCount(); i++)
     {
-        if (choices[x] == 1)
+        // If not yet found, add it, vertices wont be dupped thanks to the DS.
+        if (choices[i] == Partition::EdgeChoice::INCLUDED) 
         {
-            Edge e = graph.Edges()[x];
+            Edge e = graph.Edges()[i];
             ds.Unify(e.nodeX, e.nodeY);
-            mstEdges[eIdx++] = x;
+            mstEdges[eIdx++] = i;
             mstCost += e.weight;
         }
     }
 
-    for (size_t x=0; x<graph.EdgeCount(); x++) 
+    for (size_t i = 0; i < graph.EdgeCount(); i++) 
     {
-        if (ds.numberOfComponents == 1)
+        // If its already connected then no additional edge is needed
+        // break out
+        if (ds.numberOfComponents == 1) 
             break;
 
-        if (choices[x] == 0)
+        // Try adding edges still not included
+        // hopefully they will compose a spanning tree.
+        if (choices[i] == Partition::EdgeChoice::NOT_ASSESSED)            
         {
-            Edge e = graph.Edges()[x];
+            Edge e = graph.Edges()[i];
             if (!ds.NodesConnected(e.nodeX, e.nodeY))
             {
                 ds.Unify(e.nodeX, e.nodeY);
-                mstEdges[eIdx++] = x;
+                mstEdges[eIdx++] = i;
                 mstCost += e.weight;
             }
         }
     }
 
+    // If no spanning tree is possible in this search space
+    // toss this partition away as it's not possible for 
+    // this search spaces to contain any spanning tree.
+    // -> return NULL
     if (ds.numberOfComponents > 1) {
         return nullptr;
     }
 
-    std::sort(mstEdges.begin(), mstEdges.end(), [](int l, int r){ return l < r; });
+    // If a spanning tree is possible, 
+    // sort the edges by index and return the valid tree.
+    std::sort(mstEdges.begin(), mstEdges.end(), 
+              [](int l, int r){ return l < r; });
 
     return new Partition(choices, mstCost, mstEdges);
 }
-
 
 // Test for duplicit trees.
 void Helper::testDups(const std::vector<Partition>& kts) {
@@ -250,7 +232,7 @@ void Helper::testTrees(const std::vector<Partition>& ks, const Graph& g) {
     cout << "INFO: Testing for cycles...\n";
     int nonTreeCount=0;
 
-    DisjointSet ds(g.VertexCount());
+    DisjointSet<int> ds(g.VertexCount());
     for (const Partition& k : ks) 
     {
         ds.Reset();

@@ -13,8 +13,14 @@
 struct Partition : public IComparable<Partition>, public IToString
 {
 public:
-    std::vector<int> choices;   // 0, 1 or -1 per edge
+    enum EdgeChoice {
+        NOT_ASSESSED = 0,
+        EXCLUDED = -1,
+        INCLUDED = 1,
+    };
+
     int mstCost;                // Cost of the found MST
+    std::vector<int> choices;   // 0, 1 or -1 per edge (use the enum for all practical purposes)
     std::vector<int> mstEdges;  // Indexes in the list of edges
 
     /// @brief Constructor that initializes a partition with a specified edge count.
@@ -35,7 +41,7 @@ public:
 
     int Compare(const Partition& rhs) const override;         // Compare based on MST cost
     
-    // Comparison operators
+    // Comparison operators, they work with the mstCost
     bool operator < (const Partition& r) const;
     bool operator > (const Partition& r) const;
     bool operator <= (const Partition& r) const;

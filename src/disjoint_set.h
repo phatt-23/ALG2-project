@@ -2,24 +2,35 @@
 #define __DISJOINT_SET_H
 
 #include "i_to_string.h"
+#include "comparable_type.h"
+
 #include <stdexcept>
+#include <unordered_map>
+#include <sstream>
 #include <vector>
 
 /// @brief Disjoint Set data structure (Union-Find) for efficiently managing disjoint sets of elements.
 /// Designed for any set of elements that can be mapped to integers.
+
+template <Comparable T>
 class DisjointSet : public IToString
 {
 private:
     /// @brief Finds the root of a node without path compression.
     /// @param nodeIndex Index of the node.
     /// @return The root of the node.
-    int find(int nodeIndex) const;
+    int find(T nodeIndex) const;
 
 public:
-    std::vector<int> nodes; ///< Parent links for each node (node i links to nodes[i]).
-    std::vector<int> sizes; ///< Size of each component, stored at the root node.
-    size_t elemCount; ///< Total number of elements in the set.
-    size_t numberOfComponents; ///< Current number of disjoint components.
+
+    ///< Parent links for each node (node i links to nodes[i]).
+    std::vector<T> nodes; 
+    ///< Size of each component, stored at the root node.
+    std::vector<T> sizes; 
+    ///< Total number of elements in the set.
+    size_t elemCount; 
+    ///< Current number of disjoint components.
+    size_t numberOfComponents; 
 
     /// @brief Default constructor for an empty Disjoint Set.
     DisjointSet() = default;
@@ -35,27 +46,135 @@ public:
     /// @brief Finds the root of a node with path compression for optimization.
     /// @param nodeIndex Index of the node.
     /// @return The root of the node.
-    int Find(int nodeIndex);
+    int Find(T nodeIndex);
 
     /// @brief Checks if two nodes belong to the same component.
     /// @param nodeX First node index.
     /// @param nodeY Second node index.
     /// @return `true` if the nodes share the same root, otherwise `false`.
-    bool NodesConnected(int nodeX, int nodeY);
+    bool NodesConnected(T nodeX, T nodeY);
 
     /// @brief Retrieves the size of the component containing a given node.
     /// @param node Node index.
     /// @return Size of the component.
-    size_t ComponentSize(int node);
+    size_t ComponentSize(T node);
 
     /// @brief Unifies the components containing two nodes by merging smaller components into larger ones.
     /// @param nodeX First node index.
     /// @param nodeY Second node index.
-    void Unify(int nodeX, int nodeY);
+    void Unify(T nodeX, T nodeY);
 
     /// @brief Converts the Disjoint Set structure into a human-readable string.
     /// @return String representation of the disjoint set, with groups displayed as `(root|elements)`.
     std::string ToString() const override;
 };
 
+// Implementation
+
+template <Comparable T>
+DisjointSet<T>::DisjointSet(size_t elemCount) : 
+    nodes(elemCount), 
+    sizes(elemCount),
+    elemCount(elemCount),
+    numberOfComponents(elemCount)
+{
+    if (elemCount <= 0) 
+        throw new std::runtime_error("Size must be bigger than 0");
+    Reset();
+}
+
+
+template <Comparable T>
+void DisjointSet<T>::Reset() {
+    numberOfComponents = elemCount;
+    for (size_t i = 0; i < elemCount; ++i) {
+        nodes[i] = i; // self-root, link to itself
+        sizes[i] = 1; // each gruop has exactly 1 node at the beginning
+    }
+}
+
+template <Comparable T>
+int DisjointSet<T>::Find(T nodeIndex) {
+    // standard root finding
+    int rootIndex = nodeIndex;
+    while (rootIndex != nodes[rootIndex])
+        rootIndex = nodes[rootIndex];
+
+    // path compression, compressing path leading to the rootIndex
+    // extra work but will lead to amortized constant time complexity
+    while (nodeIndex != rootIndex) {
+        int nextIndex = nodes[nodeIndex];
+        nodes[nodeIndex] = rootIndex;
+        nodeIndex = nextIndex;
+    }
+
+    return rootIndex;
+}
+
+template <Comparable T>
+int DisjointSet<T>::find(T nodeIndex) const {
+    int rootIndex = nodeIndex;
+    while (rootIndex != nodes[rootIndex])
+        rootIndex = nodes[rootIndex];
+    return rootIndex;
+}
+
+template <Comparable T>
+bool DisjointSet<T>::NodesConnected(T nodeX, T nodeY) { 
+    return Find(nodeX) == Find(nodeY); 
+}
+
+template <Comparable T>
+size_t DisjointSet<T>::ComponentSize(T node) { 
+    return sizes[Find(node)]; 
+}
+
+template <Comparable T>
+void DisjointSet<T>::Unify(T nodeX, T nodeY) {
+    // find roots of both nodes X and Y
+    int rootX = Find(nodeX);
+    int rootY = Find(nodeY);
+    
+    // if are the same no work needed, already in the same set
+    if (rootX == rootY) return;
+
+    // merge two component together, smaller comp to larger comp
+    if (sizes[rootX] < sizes[rootY]) {
+        sizes[rootY] += sizes[rootX];
+        nodes[rootX] = rootY;
+    } else {
+        sizes[rootX] += sizes[rootY];
+        nodes[rootY] = rootX;
+    }
+    
+    // there is now one less components
+    numberOfComponents--; 
+}
+
+template <Comparable T>
+std::string 
+DisjointSet<T>::ToString() const {
+    std::unordered_map<int, std::vector<int>> groups;
+
+    for (size_t i=0; i < elemCount; ++i) {
+        int n = nodes[i];
+        groups[find(n)].push_back(i);
+    }
+    
+    std::stringstream ss;
+
+    ss << "(";
+    for (auto [r, cs] : groups) {
+        ss << "(" << r << "|";
+        for (size_t i=0; i<cs.size(); ++i) {
+            ss << cs[i] << (i==(cs.size()-1) ? "" : " ");
+        }
+        ss << ")";
+    }
+    ss << ")";
+
+    return ss.str();
+}
+
 #endif // __DISJOINT_SET_H
+

@@ -2,11 +2,13 @@
 #include <sstream>
 
 Partition::Partition(std::vector<int> ch, int cost, std::vector<int> edges)
-: choices(ch), mstCost(cost), mstEdges(edges) 
+: mstCost(cost), choices(ch), mstEdges(edges) 
 {}
 
 Partition::Partition(size_t edgeCount)
-: choices(std::vector<int>(edgeCount)), mstEdges(std::vector<int>(edgeCount)), mstCost(0)
+: mstCost(0), 
+    choices(std::vector<int>(edgeCount)), 
+    mstEdges(std::vector<int>(edgeCount))
 {}
 
 void Partition::Reset() {
@@ -14,7 +16,6 @@ void Partition::Reset() {
     this->mstCost = 0;
     this->mstEdges.clear();
 }
-
 
 std::string 
 Partition::ToString() const {

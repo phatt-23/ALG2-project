@@ -67,7 +67,7 @@ public:
     static Partition* createPartition(
         const std::vector<int>& choices, 
         const Graph& g, 
-        DisjointSet& ds
+        DisjointSet<int>& ds
     );
 
     /// @brief Solves for all possible partitions of the graph.
