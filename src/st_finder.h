@@ -1,5 +1,5 @@
-#ifndef __HELPER_H
-#define __HELPER_H
+#ifndef __SPANNING_TREES_FINDER_H
+#define __SPANNING_TREES_FINDER_H
 
 #include "edge.h"
 #include "matrix.h"
@@ -13,7 +13,7 @@
 /// The Helper class provides static methods to read adjacency matrices,
 /// create edges from those matrices, solve for various partitions, and
 /// perform testing of trees for duplicity and cycle validation.
-class Helper 
+class SpanningTreesFinder
 {
 public:
     /// @brief Writes all found trees to a specified output stream.
@@ -46,6 +46,7 @@ public:
     /// This method reads the adjacency matrix and constructs a Matrix object.
     /// @param inputStream The input stream to read the adjacency matrix from.
     /// @return A Matrix object representing the adjacency matrix.
+    [[nodiscard]]
     static Matrix<int> readAdjacencyMatrix(std::ifstream& inputStream);
 
     /// @brief Creates edges from an adjacency matrix.
@@ -54,6 +55,7 @@ public:
     /// adjacency matrix.
     /// @param adjMat The adjacency matrix from which to create edges.
     /// @return A vector of edges created from the adjacency matrix.
+    [[nodiscard]]
     static std::vector<Edge> createEdges(const Matrix<int>& adjMat);
 
     /// @brief Creates a partition of the graph based on specified choices.
@@ -64,6 +66,7 @@ public:
     /// @param g The graph from which to create the partition.
     /// @param ds The disjoint set used for cycle checking.
     /// @return A pointer to a Partition object, or nullptr if construction fails.
+    [[nodiscard]]
     static Partition* createPartition(
         const std::vector<int>& choices, 
         const Graph& g, 
@@ -76,6 +79,7 @@ public:
     /// returns them sorted by their cost.
     /// @param g The graph for which to find spanning trees.
     /// @return A vector of partitions representing the spanning trees.
+    [[nodiscard]]
     static std::vector<Partition> solve(const Graph& g);
 
     /// @brief Prints the details of the trees in the console.
@@ -96,7 +100,7 @@ public:
     /// This method checks all partitions for duplicity and reports any 
     /// duplicates found in the console.
     /// @param kts A vector of partitions to be checked for duplicates.
-    static void testDups(const std::vector<Partition>& kts);
+    static void testDuplicates(const std::vector<Partition>& kts);
 
     /// @brief Tests if all partitions are valid trees (i.e., contain no cycles).
     /// 
@@ -104,7 +108,7 @@ public:
     /// thus qualifies as a tree.
     /// @param ks A vector of partitions representing the trees to be checked.
     /// @param g The graph associated with the partitions.
-    static void testTrees(
+    static void testCycles(
         const std::vector<Partition>& ks, 
         const Graph& g
     );
@@ -123,10 +127,10 @@ public:
         const char* outputPath, 
         const char* headPath, 
         const char* tailPath, 
-        const int mode,
+        int mode,
         const Graph& g,
         const std::vector<Partition>& ks
     );
 };
 
-#endif // __HELPER_H
+#endif // __SPANNING_TREES_FINDER_H

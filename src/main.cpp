@@ -1,6 +1,6 @@
 #include "partition.h"
 #include "graph.h"
-#include "helper.h"
+#include "st_finder.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -8,7 +8,7 @@
 #include <ostream>
 #include <vector>
 
-int main(const int argc, const char** argv) 
+int main(const int argc, const char** argv)
 {
     using std::cout;
 
@@ -26,7 +26,7 @@ int main(const int argc, const char** argv)
     // Read in the adjacencyMartix from the input file
     // and put it into a Matrix.
     std::ifstream input(argv[1]); 
-    Matrix<int> adjMat = Helper::readAdjacencyMatrix(input);
+    Matrix<int> adjMat = SpanningTreesFinder::readAdjacencyMatrix(input);
 
     // Construct a graph out of the adjacency matrix.
     // Debug print out. 
@@ -42,25 +42,25 @@ int main(const int argc, const char** argv)
 
     // Retrieve all the possible spanning trees 
     // and put it into a list.
-    std::vector<Partition> ks = Helper::solve(graph); 
+    std::vector<Partition> ks = SpanningTreesFinder::solve(graph);
 
-    // Based on the inputed flag 
+    // Based on the inputted flag
     // vary the verbosity of debug printing.
     int mode = atoi(argv[2]);
-    Helper::PrintTrees(ks, graph, mode);
+    SpanningTreesFinder::PrintTrees(ks, graph, mode);
     
     // If there are any non-trees among the supposed spanning trees, 
     // find them and print them out.
-    Helper::testTrees(ks, graph); 
+    SpanningTreesFinder::testCycles(ks, graph);
    
     // If there are any duplicate trees, 
     // find them and print them out.
-    Helper::testDups(ks); 
+    SpanningTreesFinder::testDuplicates(ks);
   
     // Construct HTML document out of the found spanning trees.
     // Open in browser: `firefox ./treeees.html`
-    Helper::writeToHtml(
-        "treeees.html", 
+    SpanningTreesFinder::writeToHtml(
+        "treeees.html",
         "./html-builder/head.html", 
         "./html-builder/tail.html", 
         mode, graph, ks
