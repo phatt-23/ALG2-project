@@ -9,10 +9,10 @@
 template<typename T>
 struct IComparable {
     /// @brief Default constructor for IComparable.
-    IComparable<T>() = default;
+    IComparable() = default;
 
     /// @brief Virtual destructor for IComparable.
-    virtual ~IComparable<T>() = default;
+    virtual ~IComparable() = default;
 
     /// @brief Compares the current instance with another instance of type T.
     /// 

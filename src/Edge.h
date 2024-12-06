@@ -1,7 +1,7 @@
 #ifndef __EDGE_H
 #define __EDGE_H
 
-#include "i_comparable.h" 
+#include "IComparable.h"
 #include <ostream> 
 
 /// @brief Represents an edge in a graph, connecting two nodes with a weight.

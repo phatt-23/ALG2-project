@@ -1,5 +1,19 @@
-#include "partition.h"
+#include "Partition.h"
 #include <sstream>
+
+Partition::Partition(Partition&& other) noexcept 
+    : mstCost(other.mstCost), 
+      choices(std::move(other.choices)), 
+      mstEdges(std::move(other.mstEdges)) {}
+
+Partition& Partition::operator=(Partition&& other) noexcept {
+    if (this != &other) {
+        mstCost = other.mstCost;
+        choices = std::move(other.choices);
+        mstEdges = std::move(other.mstEdges);
+    }
+    return *this;
+}
 
 Partition::Partition(std::vector<int> ch, int cost, std::vector<int> edges)
 : mstCost(cost), choices(ch), mstEdges(edges) 

@@ -1,9 +1,9 @@
 #ifndef __PARTITION_H
 #define __PARTITION_H
 
-#include "i_comparable.h"  
-#include "i_to_string.h"   
-#include "graph.h"         
+#include "IComparable.h"
+#include "IToString.h"
+#include "Graph.h"
 #include <ostream>
 #include <string>
 #include <vector>
@@ -32,6 +32,10 @@ public:
     // Copy constructors
     Partition(const Partition& p) = default;
     Partition& operator=(const Partition& p) = default; 
+
+    // Copy constructors (rvalue)
+    Partition(Partition&& other) noexcept;
+    Partition& operator=(Partition&& other) noexcept;
 
     /// @brief Resets the partition to its initial state.
     void Reset();

@@ -1,9 +1,9 @@
 #ifndef __GRAPH_H
 #define __GRAPH_H
 
-#include "edge.h"
-#include "i_to_string.h"
-#include "matrix.h"
+#include "Edge.h"
+#include "IToString.h"
+#include "Matrix.h"
 #include <cstddef>
 #include <vector>
 

@@ -1,8 +1,8 @@
 #ifndef _MATRIX_H
 #define _MATRIX_H
 
-#include "i_to_string.h"
-#include "comparable_type.h"
+#include "IToString.h"
+#include "ComparableType.h"
 
 #include <algorithm>
 #include <cstdlib>

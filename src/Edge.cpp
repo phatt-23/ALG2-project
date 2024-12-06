@@ -1,4 +1,4 @@
-#include "edge.h"
+#include "Edge.h"
 
 Edge::Edge(int x, int y, int w) : nodeX(x), nodeY(y), weight(w) {}
 Edge::~Edge() = default;

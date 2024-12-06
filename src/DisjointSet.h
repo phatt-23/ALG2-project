@@ -1,8 +1,8 @@
 #ifndef __DISJOINT_SET_H
 #define __DISJOINT_SET_H
 
-#include "i_to_string.h"
-#include "comparable_type.h"
+#include "IToString.h"
+#include "ComparableType.h"
 
 #include <stdexcept>
 #include <unordered_map>

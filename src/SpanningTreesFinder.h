@@ -1,12 +1,14 @@
 #ifndef __SPANNING_TREES_FINDER_H
 #define __SPANNING_TREES_FINDER_H
 
-#include "edge.h"
-#include "matrix.h"
-#include "partition.h"
-#include "disjoint_set.h"
+#include "Edge.h"
+#include "Matrix.h"
+#include "Partition.h"
+#include "DisjointSet.h"
 #include <istream>
 #include <vector>
+
+#include "Vector.h"
 
 /// @brief A utility class for performing various graph-related operations.
 /// 
@@ -26,7 +28,7 @@ public:
     static void writeAllTrees(
         std::ofstream& output, 
         const Graph& graph, 
-        const std::vector<Partition>& ks
+        const Vector<Partition>& ks
     );
 
     /// @brief Writes only the k-th tree to a specified output stream.
@@ -38,7 +40,7 @@ public:
     static void writeOnlyKth(
         std::ofstream& output, 
         const Graph& graph, 
-        const std::vector<Partition>& ks
+        const Vector<Partition>& ks
     );
 
     /// @brief Reads an adjacency matrix from an input stream.
@@ -56,7 +58,7 @@ public:
     /// @param adjMat The adjacency matrix from which to create edges.
     /// @return A vector of edges created from the adjacency matrix.
     [[nodiscard]]
-    static std::vector<Edge> createEdges(const Matrix<int>& adjMat);
+    static Vector<Edge> createEdges(const Matrix<int>& adjMat);
 
     /// @brief Creates a partition of the graph based on specified choices.
     /// 
@@ -68,7 +70,7 @@ public:
     /// @return A pointer to a Partition object, or nullptr if construction fails.
     [[nodiscard]]
     static Partition* createPartition(
-        const std::vector<int>& choices, 
+        const std::vector<int>& choices,
         const Graph& g, 
         DisjointSet<int>& ds
     );
@@ -80,7 +82,8 @@ public:
     /// @param g The graph for which to find spanning trees.
     /// @return A vector of partitions representing the spanning trees.
     [[nodiscard]]
-    static std::vector<Partition> solve(const Graph& g);
+    static Vector<Partition> solve(const Graph& g);
+
 
     /// @brief Prints the details of the trees in the console.
     /// 
@@ -90,7 +93,7 @@ public:
     /// @param graph The graph for which the trees are defined.
     /// @param mode The mode of printing: different modes display different outputs.
     static void PrintTrees(
-        const std::vector<Partition>& ks, 
+        const Vector<Partition>& ks,
         const Graph& graph, 
         int mode
     );
@@ -100,7 +103,7 @@ public:
     /// This method checks all partitions for duplicity and reports any 
     /// duplicates found in the console.
     /// @param kts A vector of partitions to be checked for duplicates.
-    static void testDuplicates(const std::vector<Partition>& kts);
+    static void testDuplicates(const Vector<Partition>& kts);
 
     /// @brief Tests if all partitions are valid trees (i.e., contain no cycles).
     /// 
@@ -109,7 +112,7 @@ public:
     /// @param ks A vector of partitions representing the trees to be checked.
     /// @param g The graph associated with the partitions.
     static void testCycles(
-        const std::vector<Partition>& ks, 
+        const Vector<Partition>& ks,
         const Graph& g
     );
 
@@ -129,7 +132,7 @@ public:
         const char* tailPath, 
         int mode,
         const Graph& g,
-        const std::vector<Partition>& ks
+        const Vector<Partition>& ks
     );
 };
 

@@ -1,7 +1,9 @@
-#include "partition.h"
-#include "graph.h"
-#include "st_finder.h"
+#include "Partition.h"
+#include "Graph.h"
+#include "SpanningTreesFinder.h"
+#include "Vector.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -42,20 +44,20 @@ int main(const int argc, const char** argv)
 
     // Retrieve all the possible spanning trees 
     // and put it into a list.
-    std::vector<Partition> ks = SpanningTreesFinder::solve(graph);
+    Vector<Partition> trees = SpanningTreesFinder::solve(graph);
 
     // Based on the inputted flag
     // vary the verbosity of debug printing.
     int mode = atoi(argv[2]);
-    SpanningTreesFinder::PrintTrees(ks, graph, mode);
+    SpanningTreesFinder::PrintTrees(trees, graph, mode);
     
     // If there are any non-trees among the supposed spanning trees, 
     // find them and print them out.
-    SpanningTreesFinder::testCycles(ks, graph);
+    SpanningTreesFinder::testCycles(trees, graph);
    
     // If there are any duplicate trees, 
     // find them and print them out.
-    SpanningTreesFinder::testDuplicates(ks);
+    SpanningTreesFinder::testDuplicates(trees);
   
     // Construct HTML document out of the found spanning trees.
     // Open in browser: `firefox ./treeees.html`
@@ -63,7 +65,7 @@ int main(const int argc, const char** argv)
         "treeees.html",
         "./html-builder/head.html", 
         "./html-builder/tail.html", 
-        mode, graph, ks
+        mode, graph, trees 
     );
 
     return 0;
