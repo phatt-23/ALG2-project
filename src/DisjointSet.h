@@ -10,10 +10,8 @@
 #include <vector>
 
 /// @brief Disjoint Set data structure (Union-Find) for efficiently managing disjoint sets of elements.
-/// Designed for any set of elements that can be mapped to integers.
-
 template <Comparable T>
-class DisjointSet : public IToString
+class DisjointSet final : public IToString
 {
 private:
     /// @brief Finds the root of a node without path compression.
@@ -24,13 +22,13 @@ private:
 public:
 
     ///< Parent links for each node (node i links to nodes[i]).
-    std::vector<T> nodes; 
+    std::vector<T> nodes{};
     ///< Size of each component, stored at the root node.
-    std::vector<T> sizes; 
+    std::vector<T> sizes{};
     ///< Total number of elements in the set.
-    size_t elemCount; 
+    size_t elemCount{};
     ///< Current number of disjoint components.
-    size_t numberOfComponents; 
+    size_t numberOfComponents{};
 
     /// @brief Default constructor for an empty Disjoint Set.
     DisjointSet() = default;
@@ -38,7 +36,7 @@ public:
     /// @brief Constructs a Disjoint Set with a specified number of elements.
     /// @param elemCount Number of elements in the set.
     /// @throws std::runtime_error if `elemCount` is zero or negative.
-    DisjointSet(size_t elemCount);
+    explicit DisjointSet(size_t elemCount);
 
     /// @brief Resets the Disjoint Set to its initial state with all elements in separate components.
     void Reset();
@@ -66,7 +64,7 @@ public:
 
     /// @brief Converts the Disjoint Set structure into a human-readable string.
     /// @return String representation of the disjoint set, with groups displayed as `(root|elements)`.
-    std::string ToString() const override;
+    [[nodiscard]] std::string ToString() const override;
 };
 
 // Implementation

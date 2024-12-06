@@ -28,7 +28,7 @@ public:
         Resize(2);
     }
 
-    Vector(size_t size) {
+    explicit Vector(size_t size) {
         Resize(size);
     }
 
@@ -168,8 +168,8 @@ public:
         _size = 0;
     }
 
-    const T& Front() const { return *(_block); }
-    const T& Back() const { return *(_block + _size); }
+    const T& Front() const { return _block[0]; }
+    const T& Back() const { return _block[_size - 1]; }
 
     T* begin() { return _block; }
     const T* begin() const { return _block; }

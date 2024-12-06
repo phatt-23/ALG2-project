@@ -25,7 +25,7 @@ public:
     /// @param output The output stream to write to.
     /// @param graph The graph containing the edges and vertices.
     /// @param ks A vector of partitions representing the trees.
-    static void writeAllTrees(
+    static void WriteAllTrees(
         std::ofstream& output, 
         const Graph& graph, 
         const Vector<Partition>& ks
@@ -37,7 +37,7 @@ public:
     /// @param output The output stream to write to.
     /// @param graph The graph containing the edges and vertices.
     /// @param ks A vector of partitions representing the trees.
-    static void writeOnlyKth(
+    static void WriteOnlyKth(
         std::ofstream& output, 
         const Graph& graph, 
         const Vector<Partition>& ks
@@ -49,7 +49,7 @@ public:
     /// @param inputStream The input stream to read the adjacency matrix from.
     /// @return A Matrix object representing the adjacency matrix.
     [[nodiscard]]
-    static Matrix<int> readAdjacencyMatrix(std::ifstream& inputStream);
+    static Matrix<int> ReadAdjacencyMatrix(std::ifstream& inputStream);
 
     /// @brief Creates edges from an adjacency matrix.
     /// 
@@ -58,7 +58,7 @@ public:
     /// @param adjMat The adjacency matrix from which to create edges.
     /// @return A vector of edges created from the adjacency matrix.
     [[nodiscard]]
-    static Vector<Edge> createEdges(const Matrix<int>& adjMat);
+    static Vector<Edge> CreateEdges(const Matrix<int>& adjMat);
 
     /// @brief Creates a partition of the graph based on specified choices.
     /// 
@@ -69,7 +69,7 @@ public:
     /// @param ds The disjoint set used for cycle checking.
     /// @return A pointer to a Partition object, or nullptr if construction fails.
     [[nodiscard]]
-    static Partition* createPartition(
+    static Partition* CreatePartition(
         const std::vector<int>& choices,
         const Graph& g, 
         DisjointSet<int>& ds
@@ -82,7 +82,7 @@ public:
     /// @param g The graph for which to find spanning trees.
     /// @return A vector of partitions representing the spanning trees.
     [[nodiscard]]
-    static Vector<Partition> solve(const Graph& g);
+    static Vector<Partition> Solve(const Graph& g);
 
 
     /// @brief Prints the details of the trees in the console.
@@ -103,7 +103,7 @@ public:
     /// This method checks all partitions for duplicity and reports any 
     /// duplicates found in the console.
     /// @param kts A vector of partitions to be checked for duplicates.
-    static void testDuplicates(const Vector<Partition>& kts);
+    static void TestDuplicates(const Vector<Partition>& kts);
 
     /// @brief Tests if all partitions are valid trees (i.e., contain no cycles).
     /// 
@@ -111,7 +111,7 @@ public:
     /// thus qualifies as a tree.
     /// @param ks A vector of partitions representing the trees to be checked.
     /// @param g The graph associated with the partitions.
-    static void testCycles(
+    static void TestCycles(
         const Vector<Partition>& ks,
         const Graph& g
     );
@@ -126,7 +126,7 @@ public:
     /// @param mode The mode determining which trees to write.
     /// @param g The graph to be represented in the HTML.
     /// @param ks A vector of partitions to write to the HTML.
-    static void writeToHtml(
+    static void WriteToHtml(
         const char* outputPath, 
         const char* headPath, 
         const char* tailPath, 

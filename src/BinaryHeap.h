@@ -47,6 +47,8 @@ public:
 
     ~BinaryHeap() = default;
 
+    size_t Size() const { return heap_vec.size(); }
+
     /// @brief Provides access to the underlying heap vector.
     /// @return Reference to the vector representing the heap.
     const std::vector<T>& HeapVec() const;
