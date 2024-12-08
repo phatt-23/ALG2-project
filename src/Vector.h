@@ -203,19 +203,7 @@ public:
 
     bool operator!=(const Vector<T>& other) const { return !(*this == other); }
 
-    // void swap(Vector<T>& other) noexcept {
-    //     std::swap(_capacity, other._capacity);
-    //     std::swap(_size, other._size);
-    //     std::swap(_block, other._block);
-    // }
 };
-
-namespace std {
-    template <typename T>
-    void swap(Vector<T>& lhs, Vector<T>& rhs) noexcept {
-        lhs.swap(rhs);
-    }
-}
 
 #endif //VECTOR_H
 
