@@ -4,9 +4,9 @@
 #include "IComparable.h"
 #include "IToString.h"
 #include "Graph.h"
+#include "Vector.h"
 #include <ostream>
 #include <string>
-#include <vector>
 #include <iostream>
 
 /// @brief Represents a partition of edges in a graph.
@@ -20,14 +20,14 @@ public:
     };
 
     int mstCost;                // Cost of the found MST
-    std::vector<int> choices;   // 0, 1 or -1 per edge (use the enum for all practical purposes)
-    std::vector<int> mstEdges;  // Indexes in the list of edges
+    Vector<int> choices;   // 0, 1 or -1 per edge (use the enum for all practical purposes)
+    Vector<int> mstEdges;  // Indexes in the list of edges
 
     /// @brief Constructor that initializes a partition with a specified edge count.
     Partition(size_t edgeCount);
 
     /// @brief Constructor that initializes a partition with given choices, cost, and edges.
-    Partition(std::vector<int> ch, int cost, std::vector<int> edges);
+    Partition(Vector<int> ch, int cost, Vector<int> edges);
 
     // Copy constructors
     Partition(const Partition& p) = default;

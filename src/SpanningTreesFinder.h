@@ -6,7 +6,6 @@
 #include "Partition.h"
 #include "DisjointSet.h"
 #include <istream>
-#include <vector>
 
 #include "Vector.h"
 
@@ -70,7 +69,7 @@ public:
     /// @return A pointer to a Partition object, or nullptr if construction fails.
     [[nodiscard]]
     static Partition* CreatePartition(
-        const std::vector<int>& choices,
+        const Vector<int>& choices,
         const Graph& g, 
         DisjointSet<int>& ds
     );

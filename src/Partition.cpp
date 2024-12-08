@@ -15,20 +15,20 @@ Partition& Partition::operator=(Partition&& other) noexcept {
     return *this;
 }
 
-Partition::Partition(std::vector<int> ch, int cost, std::vector<int> edges)
+Partition::Partition(Vector<int> ch, int cost, Vector<int> edges)
 : mstCost(cost), choices(ch), mstEdges(edges) 
 {}
 
 Partition::Partition(size_t edgeCount)
 : mstCost(0), 
-    choices(std::vector<int>(edgeCount)), 
-    mstEdges(std::vector<int>(edgeCount))
+    choices(Vector<int>(edgeCount)), 
+    mstEdges(Vector<int>(edgeCount))
 {}
 
 void Partition::Reset() {
-    this->choices.clear();
+    this->choices.Clear();
     this->mstCost = 0;
-    this->mstEdges.clear();
+    this->mstEdges.Clear();
 }
 
 std::string 

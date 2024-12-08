@@ -3,11 +3,11 @@
 
 #include "IToString.h"
 #include "ComparableType.h"
+#include "Vector.h"
 
 #include <stdexcept>
 #include <unordered_map>
 #include <sstream>
-#include <vector>
 
 /// @brief Disjoint Set data structure (Union-Find) for efficiently managing disjoint sets of elements.
 template <Comparable T>
@@ -22,9 +22,9 @@ private:
 public:
 
     ///< Parent links for each node (node i links to nodes[i]).
-    std::vector<T> nodes{};
+    Vector<T> nodes;
     ///< Size of each component, stored at the root node.
-    std::vector<T> sizes{};
+    Vector<T> sizes;
     ///< Total number of elements in the set.
     size_t elemCount{};
     ///< Current number of disjoint components.
@@ -86,8 +86,8 @@ template <Comparable T>
 void DisjointSet<T>::Reset() {
     numberOfComponents = elemCount;
     for (size_t i = 0; i < elemCount; ++i) {
-        nodes[i] = i; // self-root, link to itself
-        sizes[i] = 1; // each gruop has exactly 1 node at the beginning
+        nodes.Insert(i, i); // self-root, link to itself
+        sizes.Insert(i, 1); // each gruop has exactly 1 node at the beginning
     }
 }
 
@@ -152,11 +152,11 @@ void DisjointSet<T>::Unify(T nodeX, T nodeY) {
 template <Comparable T>
 std::string 
 DisjointSet<T>::ToString() const {
-    std::unordered_map<int, std::vector<int>> groups;
+    std::unordered_map<int, Vector<int>> groups;
 
     for (size_t i=0; i < elemCount; ++i) {
         int n = nodes[i];
-        groups[find(n)].push_back(i);
+        groups[find(n)].PushBack(i);
     }
     
     std::stringstream ss;
@@ -164,8 +164,8 @@ DisjointSet<T>::ToString() const {
     ss << "(";
     for (auto [r, cs] : groups) {
         ss << "(" << r << "|";
-        for (size_t i=0; i<cs.size(); ++i) {
-            ss << cs[i] << (i==(cs.size()-1) ? "" : " ");
+        for (size_t i=0; i<cs.Size(); ++i) {
+            ss << cs[i] << (i==(cs.Size()-1) ? "" : " ");
         }
         ss << ")";
     }

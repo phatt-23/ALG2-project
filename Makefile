@@ -1,7 +1,7 @@
 # MAKEFILE FOR C/C++ PROJECTS
 # common
 CC					:= g++
-CFLAGS				:= -std=c++23 -Wall -Wextra -g -Ofast # -Qunused-arguments # -std=c23
+CFLAGS				:= -std=c++23 -Wall -Wextra -g # -Qunused-arguments # -std=c23
 LDFLAGS   			:= -lpthread -lm
 SHOW_CMD  			?=#@
 

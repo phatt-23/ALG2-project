@@ -22,8 +22,8 @@ private:
 
 public:
     using ValueType = T;
-    // using Iterator = VectorIterator<Vector<T>>;
 
+    // constructors
     Vector() {
         Resize(2);
     }
@@ -32,6 +32,16 @@ public:
         Resize(size);
     }
 
+
+    explicit Vector(size_t size, const T& filler) {
+        Resize(size);
+        _size = size; // should be at the end
+        for (size_t i = 0; i < _size; i++) {
+            _block[i] = filler;
+        }
+    }
+
+    // copy and move constructors
     Vector(const Vector<T>& other) {
         Resize(other._capacity); 
         _size = other._size;
@@ -39,7 +49,6 @@ public:
             new(&_block[i]) T(other._block[i]); // Copy construct
         }
     }
-
 
     Vector(Vector<T>&& other) noexcept
         : _capacity(other._capacity), _size(other._size), _block(other._block) 
@@ -50,22 +59,25 @@ public:
     }
 
     Vector<T>& operator=(const Vector<T>& other) {
-        std::cout << "Vector<T>& operator=(const Vector<T>& other) {\n";
         if (this == &other) return *this;
 
         Clear();
         ::operator delete(_block, _capacity * sizeof(T));
 
-        Resize(other._capacity);
+        T* newBlock = static_cast<T*>(::operator new(other._capacity * sizeof(T)));
+
         _size = other._size;
+        _block = newBlock;
+        _capacity = other._capacity;
+
         for (size_t i = 0; i < _size; i++) {
             new(&_block[i]) T(other._block[i]);
         }
+
         return *this;
     }
 
     Vector<T>& operator=(Vector<T>&& other) noexcept {
-        std::cout << "Vector<T>& operator=(Vector<T>&& other) noexcept {\n";
         if (this == &other) return *this;
 
         Clear();
@@ -127,7 +139,6 @@ public:
         if (index >= _size) {
             _size = index + 1;
         }
-
     }
 
     void PushBack(const T& value) {
@@ -168,6 +179,8 @@ public:
         _size = 0;
     }
 
+    bool Empty() const { return _size == 0; }
+
     const T& Front() const { return _block[0]; }
     const T& Back() const { return _block[_size - 1]; }
 
@@ -176,7 +189,33 @@ public:
     T* end() { return _block + _size; }
     const T* end() const { return _block + _size; }
 
+    bool operator==(const Vector<T>& other) const {
+        // are not the same size
+        if (_size != other.Size()) return false;
+
+        for (size_t i = 0; i < _size; i++) {
+            // have differing elements
+            if (_block[i] != other[i]) return false;
+        }
+
+        return true; // all the same
+    }
+
+    bool operator!=(const Vector<T>& other) const { return !(*this == other); }
+
+    // void swap(Vector<T>& other) noexcept {
+    //     std::swap(_capacity, other._capacity);
+    //     std::swap(_size, other._size);
+    //     std::swap(_block, other._block);
+    // }
 };
+
+namespace std {
+    template <typename T>
+    void swap(Vector<T>& lhs, Vector<T>& rhs) noexcept {
+        lhs.swap(rhs);
+    }
+}
 
 #endif //VECTOR_H
 

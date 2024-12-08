@@ -76,7 +76,7 @@ SpanningTreesFinder::Solve(const Graph& g)
     auto partitions = BinaryHeap<Partition*, decltype(partCmp)>(partCmp);
 
     // Initial state is choice where all the edges all not assessed.
-    const std::vector<int> initChoices(g.EdgeCount(), Partition::NOT_ASSESSED);
+    const Vector<int> initChoices(g.EdgeCount(), Partition::NOT_ASSESSED);
 
     // Find the actual MST, put it in the storage of STs
     Partition* mst = CreatePartition(initChoices, g, disjointSet);
@@ -88,7 +88,7 @@ SpanningTreesFinder::Solve(const Graph& g)
     spanningTrees.PushBack(*mst);
     partitions.Insert(mst);
 
-   	size_t spanningTreeCount = 1;
+    // size_t spanningTreeCount = 1;
 
     // while all the search spaces still weren't
     // searched through, continue searching
@@ -107,7 +107,7 @@ SpanningTreesFinder::Solve(const Graph& g)
             if (part->choices[part->mstEdges[x]] == Partition::EdgeChoice::NOT_ASSESSED)
             {
                 // copy the choices of the previous iteration
-                std::vector<int> choices(part->choices);
+                Vector<int> choices(part->choices);
 
                 // Mark current as excluded and try a tree is possible
                 choices[part->mstEdges[x]] = Partition::EdgeChoice::EXCLUDED;
@@ -128,7 +128,7 @@ SpanningTreesFinder::Solve(const Graph& g)
                 partitions.Insert(nxt);
                 spanningTrees.PushBack(*nxt);
 
-                std::cout << spanningTreeCount++ << " " << partitions.Size() << "\n";
+                // std::cout << spanningTreeCount++ << " " << partitions.Size() << "\n";
             }
         }
 
@@ -150,14 +150,14 @@ SpanningTreesFinder::Solve(const Graph& g)
 /// the search space, nullptr is returned.
 /// Is using Kruskal's algorithm.
 Partition* 
-SpanningTreesFinder::CreatePartition(const std::vector<int>& choices, const Graph& g, DisjointSet<int>& ds)
+SpanningTreesFinder::CreatePartition(const Vector<int>& choices, const Graph& g, DisjointSet<int>& ds)
 {
     ds.Reset(); // Resets the disjoint set, reusing the same memory again.
     
     int mstCost = 0;
 
     // Holds indices of the mst's edges. for starters, put in invalid values.
-    std::vector<int> mstEdges(g.VertexCount() - 1, -999);
+    Vector<int> mstEdges(g.VertexCount() - 1, -999);
 
     // Marks how many edges have already been added to the mstEdges vector
     int eIdx = 0;
@@ -170,7 +170,7 @@ SpanningTreesFinder::CreatePartition(const std::vector<int>& choices, const Grap
         {
             const Edge e = g.Edges()[i];
             ds.Unify(e.nodeX, e.nodeY);
-            mstEdges[eIdx++] = i;
+            mstEdges.Insert(eIdx++, i);
             mstCost += e.weight;
         }
     }
@@ -188,7 +188,7 @@ SpanningTreesFinder::CreatePartition(const std::vector<int>& choices, const Grap
             if (const Edge e = g.Edges()[i]; !ds.NodesConnected(e.nodeX, e.nodeY))
             {
                 ds.Unify(e.nodeX, e.nodeY);
-                mstEdges[eIdx++] = i;
+                mstEdges.Insert(eIdx++, i);
                 mstCost += e.weight;
             }
         }

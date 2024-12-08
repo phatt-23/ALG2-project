@@ -3,12 +3,10 @@
 #include "SpanningTreesFinder.h"
 #include "Vector.h"
 
-#include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <ostream>
-#include <vector>
 
 int main(const int argc, const char** argv) {
     using std::cout;

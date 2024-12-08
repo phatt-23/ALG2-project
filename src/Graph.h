@@ -4,8 +4,8 @@
 #include "Edge.h"
 #include "IToString.h"
 #include "Matrix.h"
+#include "Vector.h"
 #include <cstddef>
-#include <vector>
 
 /// @brief Represents a graph consisting of vertices and edges.
 /// 
@@ -15,7 +15,7 @@ class Graph : public IToString
 {
     size_t vertexCount; ///< The number of vertices in the graph.
     size_t edgeCount;   ///< The number of edges in the graph.
-    std::vector<Edge> edges; ///< A vector holding all edges in the graph.
+    Vector<Edge> edges; ///< A vector holding all edges in the graph.
 
     /// @brief Creates edges from an adjacency matrix.
     /// 
@@ -23,7 +23,7 @@ class Graph : public IToString
     /// the weights specified in the matrix.
     /// @param adjMat The adjacency matrix representing the graph.
     /// @return A vector of edges created from the adjacency matrix.
-    std::vector<Edge> createEdges(const Matrix<int>& adjMat);
+    Vector<Edge> createEdges(const Matrix<int>& adjMat);
 
 public:
     /// @brief Default constructor for Graph.
@@ -32,7 +32,7 @@ public:
     /// @brief Constructs a Graph with a specified number of vertices and edges.
     /// @param vertexCount The number of vertices in the graph.
     /// @param edges A vector of edges to initialize the graph.
-    Graph(size_t vertexCount, std::vector<Edge>& edges);
+    Graph(size_t vertexCount, Vector<Edge>& edges);
     
     /// @brief Constructs a Graph from an adjacency matrix.
     /// @param adjMatrix The adjacency matrix to create the graph from.
@@ -48,7 +48,7 @@ public:
 
     /// @brief Retrieves the edges of the graph.
     /// @return A reference to the vector of edges.
-    const std::vector<Edge>& Edges() const;
+    const Vector<Edge>& Edges() const;
 
     /// @brief Converts the graph to a string representation.
     /// 
